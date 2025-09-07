@@ -24,3 +24,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.maplibregl-marker {
+  cursor: pointer;
+}
+
+.maplibregl-popup-content {
+  font-family: inherit;
+}
+
+.country-popup .maplibregl-popup-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 0;
+}
+
+.country-popup .maplibregl-popup-close-button {
+  color: #666;
+  font-size: 16px;
+  padding: 8px;
+}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000" height="500" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style type="text/css">
+      path { fill-rule: evenodd; stroke: #e2e8f0; stroke-width: 0.5; }
+      path:hover { stroke: #3b82f6; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <!-- Европа -->
+  <path d="M450 180 L480 175 L500 190 L490 210 L460 215 L440 200 Z" id="DE" data-name="Germany" fill="#e5e7eb"/>
+  <path d="M420 170 L450 165 L460 185 L430 190 Z" id="FR" data-name="France" fill="#e5e7eb"/>
+  <path d="M480 170 L510 165 L520 185 L490 190 Z" id="GB" data-name="United Kingdom" fill="#e5e7eb"/>
+  <path d="M460 190 L490 185 L500 205 L470 210 Z" id="IT" data-name="Italy" fill="#e5e7eb"/>
+  <path d="M470 200 L500 195 L510 215 L480 220 Z" id="ES" data-name="Spain" fill="#e5e7eb"/>
+
+  <!-- Азия -->
+  <path d="M650 180 L750 170 L760 220 L650 230 Z" id="CN" data-name="China" fill="#e5e7eb"/>
+  <path d="M700 230 L800 220 L810 270 L700 280 Z" id="IN" data-name="India" fill="#e5e7eb"/>
+  <path d="M750 150 L780 145 L790 175 L760 180 Z" id="JP" data-name="Japan" fill="#e5e7eb"/>
+  <path d="M580 180 L620 175 L630 205 L590 210 Z" id="RU" data-name="Russia" fill="#e5e7eb"/>
+  <path d="M650 250 L680 245 L690 275 L660 280 Z" id="TH" data-name="Thailand" fill="#e5e7eb"/>
+  <path d="M630 220 L660 215 L670 245 L640 250 Z" id="TR" data-name="Turkey" fill="#e5e7eb"/>
+
+  <!-- Северная Америка -->
+  <path d="M150 150 L280 140 L290 200 L160 210 Z" id="US" data-name="United States" fill="#e5e7eb"/>
+  <path d="M120 130 L250 120 L260 180 L130 190 Z" id="CA" data-name="Canada" fill="#e5e7eb"/>
+  <path d="M200 210 L250 205 L260 235 L210 240 Z" id="MX" data-name="Mexico" fill="#e5e7eb"/>
+
+  <!-- Южная Америка -->
+  <path d="M220 280 L270 270 L280 350 L230 360 Z" id="BR" data-name="Brazil" fill="#e5e7eb"/>
+  <path d="M180 250 L230 240 L240 280 L190 290 Z" id="AR" data-name="Argentina" fill="#e5e7eb"/>
+  <path d="M160 220 L210 210 L220 250 L170 260 Z" id="CO" data-name="Colombia" fill="#e5e7eb"/>
+  <path d="M190 260 L220 255 L225 275 L195 280 Z" id="PE" data-name="Peru" fill="#e5e7eb"/>
+
+  <!-- Африка -->
+  <path d="M450 250 L520 240 L530 320 L460 330 Z" id="ZA" data-name="South Africa" fill="#e5e7eb"/>
+  <path d="M430 220 L480 210 L490 250 L440 260 Z" id="EG" data-name="Egypt" fill="#e5e7eb"/>
+  <path d="M410 240 L450 230 L460 270 L420 280 Z" id="NG" data-name="Nigeria" fill="#e5e7eb"/>
+  <path d="M440 270 L470 260 L480 290 L450 300 Z" id="KE" data-name="Kenya" fill="#e5e7eb"/>
+  <path d="M420 200 L450 190 L460 220 L430 230 Z" id="MA" data-name="Morocco" fill="#e5e7eb"/>
+
+  <!-- Австралия и Океания -->
+  <path d="M750 320 L850 310 L860 360 L760 370 Z" id="AU" data-name="Australia" fill="#e5e7eb"/>
+  <path d="M780 280 L810 275 L815 295 L785 300 Z" id="NZ" data-name="New Zealand" fill="#e5e7eb"/>
+</svg>
+
+
