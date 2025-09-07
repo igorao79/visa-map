@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, ReactNode } from 'react';
 import Flag from 'react-world-flags';
 import { searchCountries, COUNTRIES } from '@/lib/countries';
 import { Country } from '@/types/visa';
@@ -9,7 +9,7 @@ interface CountrySearchProps {
   onSelectCountry: (countryCode: string) => void;
   selectedCountry: string | null;
   placeholder?: string;
-  label?: string;
+  label?: ReactNode;
 }
 
 export default function CountrySearch({

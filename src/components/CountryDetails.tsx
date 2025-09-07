@@ -5,6 +5,7 @@ import Flag from 'react-world-flags';
 import { VisaStatus } from '@/types/visa';
 import { VisaApiClient } from '@/lib/visa-api';
 import { COUNTRIES } from '@/lib/countries';
+import { AiOutlineFileText, AiOutlineClose, AiOutlineCheckCircle, AiOutlineQuestionCircle, AiOutlineLaptop, AiOutlineBorderlessTable } from 'react-icons/ai';
 
 interface CountryDetailsProps {
   fromCountry: string | null;
@@ -27,38 +28,38 @@ export default function CountryDetails({
   };
 
   const getVisaStatusInfo = (status: VisaStatus | null) => {
-    if (!status) return { title: 'Информация недоступна', description: '', color: 'gray', icon: '❓' };
+    if (!status) return { title: 'Информация недоступна', description: '', color: 'gray', icon: AiOutlineQuestionCircle };
 
     const statusInfo = {
       VF: {
         title: 'Без визы',
         description: 'Вы можете въезжать без предварительного оформления визы. Обычно разрешается пребывание от 30 до 90 дней.',
         color: 'green',
-        icon: '✅'
+        icon: AiOutlineCheckCircle
       },
       VOA: {
         title: 'Виза по прилёту / eTA',
         description: 'Виза оформляется непосредственно при въезде в страну или требуется электронное разрешение на въезд.',
         color: 'yellow',
-        icon: '🛂'
+        icon: AiOutlineBorderlessTable
       },
       EV: {
         title: 'Электронная виза',
         description: 'Необходимо подать заявку на электронную визу онлайн до поездки. Обычно процесс занимает от 3 до 10 дней.',
         color: 'blue',
-        icon: '💻'
+        icon: AiOutlineLaptop
       },
       VR: {
         title: 'Требуется виза',
         description: 'Необходимо заранее оформить визу в консульстве или визовом центре. Процесс может занять от 5 до 30 дней.',
         color: 'orange',
-        icon: '📄'
+        icon: AiOutlineFileText
       },
       NA: {
         title: 'Въезд запрещён',
         description: 'Въезд в данную страну временно или постоянно ограничен для граждан вашей страны.',
         color: 'red',
-        icon: '🚫'
+        icon: AiOutlineClose
       }
     };
 
@@ -126,7 +127,7 @@ export default function CountryDetails({
           {/* Visa Status */}
           <div className={`p-4 rounded-lg border-2 ${getColorClasses(statusInfo.color)}`}>
             <div className="flex items-center space-x-3 mb-3">
-              <span className="text-2xl">{statusInfo.icon}</span>
+              <span className="text-2xl">{React.createElement(statusInfo.icon)}</span>
               <div>
                 <h3 className="font-semibold text-lg">{statusInfo.title}</h3>
                 <p className="text-sm opacity-80">Визовый статус</p>
