@@ -71,3 +71,6 @@ export const getVisaStatusText = (status: string) => {
   };
   return statusMap[status] || 'Неизвестно';
 };
+
+
+

@@ -8,14 +8,14 @@ import { VisaApiResponse } from '@/types/visa';
 import { convertToIso2 } from '@/lib/country-utils';
 import CountryTooltip from './worldmap/CountryTooltip';
 import CountryPath from './worldmap/CountryPath';
-import MapLegend from './worldmap/MapLegend';
-import InfoPanel from './worldmap/InfoPanel';
+import MapLegend, { WarningModal } from './worldmap/MapLegend';
+// import InfoPanel from './worldmap/InfoPanel';
 import MapZoomControls from './worldmap/MapZoomControls';
 import { getCountryColor, getVisaStatusText } from './worldmap/mapUtils';
 import { useMapZoom } from './worldmap/useMapZoom';
 import { useCountryData } from './worldmap/useCountryData';
 import { useMapInteractions } from './worldmap/useMapInteractions';
-import { MAP_PROJECTION, ZOOM_CONFIG, SVG_CONFIG } from './worldmap/mapConstants';
+import { MAP_PROJECTION, ZOOM_CONFIG, SVG_CONFIG, MOBILE_SVG_CONFIG, MOBILE_PROJECTION, MOBILE_ZOOM_CONFIG } from './worldmap/mapConstants';
 
 interface WorldMapProps {
   selectedCountry: string | null;
@@ -57,7 +57,34 @@ export default function WorldMap({
 }: WorldMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const { countries, loading } = useCountryData();
-  const { zoomState, resetZoom, centerMap, updateZoomState } = useMapZoom({ svgRef });
+  
+  // Состояние для размера экрана
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Отслеживание размера экрана
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  // Выбор настроек в зависимости от размера экрана
+  const svgConfig = isMobile ? MOBILE_SVG_CONFIG : SVG_CONFIG;
+  const projectionConfig = isMobile ? MOBILE_PROJECTION : MAP_PROJECTION;
+  const zoomConfig = isMobile ? MOBILE_ZOOM_CONFIG : ZOOM_CONFIG;
+  
+  const { zoomState, resetZoom, centerMap, updateZoomState } = useMapZoom({ svgRef, zoomConfig });
+
+  // Состояние модальных окон
+  const [isLegendOpen, setIsLegendOpen] = useState(false);
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [isInfoPanelVisible, setIsInfoPanelVisible] = useState(true);
+
   const {
     hoveredCountry,
     tooltipPosition,
@@ -67,13 +94,22 @@ export default function WorldMap({
     clearHoverState
   } = useMapInteractions({ countries, onCountryClick });
 
+  // Обработчик клика по стране с проверкой на одинаковые страны
+  const handleCountryClickWithWarning = useCallback((countryId: string, event: React.MouseEvent) => {
+    if (!isFirstClick && countryId === userPassportCountry) {
+      setIsWarningOpen(true);
+      return;
+    }
+    handleCountryClick(countryId, event);
+  }, [handleCountryClick, isFirstClick, userPassportCountry]);
 
 
 
-  // Создаем проекцию карты с большим масштабом
+
+  // Создаем проекцию карты с учетом размера экрана
   const projection = geoNaturalEarth1()
-    .scale(MAP_PROJECTION.SCALE)
-    .translate(MAP_PROJECTION.TRANSLATE);
+    .scale(projectionConfig.SCALE)
+    .translate(projectionConfig.TRANSLATE);
 
   // Создаем генератор путей
   const pathGenerator = geoPath().projection(projection);
@@ -86,11 +122,76 @@ export default function WorldMap({
     const g = svg.select('g');
 
     const zoomBehavior = d3Zoom.zoom<SVGSVGElement, unknown>()
-      .scaleExtent(ZOOM_CONFIG.SCALE_EXTENT)
+      .scaleExtent(zoomConfig.SCALE_EXTENT)
+      .wheelDelta((event: WheelEvent) => {
+        // Улучшенная поддержка wheel событий для touchpad'ов
+        return -event.deltaY * (event.deltaMode ? 120 : 1) / 500;
+      })
+      .touchable(true) // Явно включаем поддержку touch
+      .filter((event: any) => {
+        // Разрешаем wheel события и touch события, но блокируем их на интерактивных элементах
+        if (event.type === 'wheel') {
+          return !event.ctrlKey || event.type === 'wheel';
+        }
+        // Для touch событий всегда разрешаем
+        if (event.type.startsWith('touch')) {
+          return true;
+        }
+        // Для mouse событий проверяем, что это не клик на страну
+        return !event.target.closest('.country-path');
+      })
       .on('zoom', (event: any) => {
         const { x, y, k } = event.transform;
-        updateZoomState({ x, y, k });
-        g.attr('transform', `translate(${x},${y}) scale(${k})`);
+
+        // Получаем размеры контейнера и SVG
+        const svgRect = svgRef.current!.getBoundingClientRect();
+        const containerWidth = svgRect.width;
+        const containerHeight = svgRect.height;
+        const svgWidth = svgConfig.WIDTH * k; // Ширина карты с учетом масштаба
+        const svgHeight = svgConfig.HEIGHT * k; // Высота карты с учетом масштаба
+
+        // Ограничиваем горизонтальное перемещение
+        let clampedX;
+
+        if (isMobile) {
+          // Мобильная логика - контролируемые ограничения
+          const mobileMinX = -30; // Ограничение влево (не дальше 30px)
+          const mobileMaxX = 30;  // Ограничение вправо (не дальше 30px)
+          clampedX = Math.max(mobileMinX, Math.min(mobileMaxX, x));
+        } else {
+          // Десктопная логика
+          const minX = -(svgWidth - containerWidth) + 20; // Левая граница
+          const maxX = -20; // Правая граница
+          clampedX = Math.max(minX, Math.min(maxX, x));
+        }
+
+        // Разная логика для мобильных и десктопных устройств
+        let clampedY;
+
+        if (isMobile) {
+          // Мобильная логика - контролируемое перемещение
+          const mobileMinY = -50; // Ограничение вверх (не дальше 50px)
+          const mobileMaxY = 50;  // Ограничение вниз (не дальше 50px)
+          clampedY = Math.max(mobileMinY, Math.min(mobileMaxY, y));
+        } else {
+          // Десктопная логика - ограничения в зависимости от масштаба
+          let minY, maxY;
+
+          if (k <= 1.3) {
+            // При базовом масштабе - жесткие ограничения
+            minY = -5;  // Минимальное смещение вниз
+            maxY = 5;   // Минимальное смещение вверх
+          } else {
+            // При увеличенном масштабе - более свободное перемещение
+            minY = -(svgHeight - containerHeight) + 20; // Верхняя граница с отступом
+            maxY = 50;  // Нижняя граница с большим отступом
+          }
+
+          clampedY = Math.max(minY, Math.min(maxY, y));
+        }
+
+        updateZoomState({ x: clampedX, y: clampedY, k });
+        g.attr('transform', `translate(${clampedX},${clampedY}) scale(${k})`);
       });
 
     svg.call(zoomBehavior);
@@ -99,12 +200,13 @@ export default function WorldMap({
     const initialTransform = d3Zoom.zoomTransform(svg.node()!).translate(zoomState.x, zoomState.y).scale(zoomState.k);
     svg.call(zoomBehavior.transform, initialTransform);
 
-  }, [loading]); // Убрали zoomState из зависимостей чтобы избежать бесконечного цикла
+  }, [loading, zoomConfig]); // Добавили zoomConfig для пересоздания при изменении настроек
 
   // Обновляем transform группы стран при изменении zoomState
   useEffect(() => {
     if (svgRef.current && !loading) {
       const g = d3Selection.select(svgRef.current).select('g');
+      // Фиксируем вертикальное положение при обновлении состояния
       g.attr('transform', `translate(${zoomState.x},${zoomState.y}) scale(${zoomState.k})`);
     }
   }, [zoomState, loading]);
@@ -127,9 +229,9 @@ export default function WorldMap({
         ref={svgRef}
         width="100%"
         height="100%"
-        viewBox={`0 0 ${SVG_CONFIG.WIDTH} ${SVG_CONFIG.HEIGHT}`}
+        viewBox={`0 0 ${svgConfig.WIDTH} ${svgConfig.HEIGHT}`}
         className="w-full h-full cursor-move"
-        style={{ backgroundColor: '#f8fafc' }}
+        style={{ backgroundColor: '#3b82f6' }} // Приятный синий цвет океана
         onMouseEnter={(e) => {
           // Очищаем hover состояние при наведении на пустые области SVG
           const target = e.target as SVGElement;
@@ -190,7 +292,7 @@ export default function WorldMap({
                 country={country}
                 pathGenerator={pathGenerator}
                 fillColor={fillColor}
-                onClick={handleCountryClick}
+                onClick={handleCountryClickWithWarning}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               />
@@ -199,15 +301,42 @@ export default function WorldMap({
         </g>
       </svg>
 
-      <InfoPanel
-        isFirstClick={isFirstClick}
-        userPassportCountry={userPassportCountry}
-        selectedCountry={selectedCountry}
-      />
+      {/* {isInfoPanelVisible && (
+        <InfoPanel
+          isFirstClick={isFirstClick}
+          userPassportCountry={userPassportCountry}
+          selectedCountry={selectedCountry}
+          onClose={() => setIsInfoPanelVisible(false)}
+        />
+      )} */}
 
       <MapZoomControls onResetZoom={resetZoom} onCenterMap={centerMap} />
 
-      <MapLegend userPassportCountry={userPassportCountry} />
+      {/* Кнопки управления */}
+      {userPassportCountry && (
+        <div className="absolute top-4 right-4 flex gap-2 z-30">
+          {!isInfoPanelVisible && (
+            <button
+              onClick={() => setIsInfoPanelVisible(true)}
+              className="bg-gray-500 text-white px-3 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition-colors text-sm font-medium"
+              title="Показать информацию"
+            >
+              Инфо
+            </button>
+          )}
+        </div>
+      )}
+
+      <MapLegend
+        userPassportCountry={userPassportCountry}
+        isOpen={isLegendOpen}
+        onClose={() => setIsLegendOpen(false)}
+      />
+
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+      />
 
       <CountryTooltip
         hoveredCountry={hoveredCountry}

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { VisaApiResponse } from '@/types/visa';
+import { COUNTRIES } from '@/lib/countries';
 
 interface CountryTooltipProps {
   hoveredCountry: string | null;
@@ -9,6 +10,12 @@ interface CountryTooltipProps {
   visaData: VisaApiResponse;
   getVisaStatusText: (status: string) => string;
 }
+
+// Функция для получения названия страны по коду
+const getCountryName = (countryCode: string): string => {
+  const country = COUNTRIES.find(c => c.code === countryCode);
+  return country?.name || countryCode;
+};
 
 export default function CountryTooltip({
   hoveredCountry,
@@ -22,15 +29,15 @@ export default function CountryTooltip({
 
   return (
     <div
-      className="absolute bg-gray-900 text-white px-3 py-2 rounded-lg shadow-lg z-40 pointer-events-none text-sm"
+      className="fixed bg-gray-900 text-white px-3 py-2 rounded-lg shadow-lg z-40 pointer-events-none text-sm"
       style={{
         left: tooltipPosition.x,
         top: tooltipPosition.y,
-        transform: 'translate(-50%, -100%)'
+        transform: 'translate(-50%, -120%)'
       }}
     >
       <div className="font-medium">
-        {hoveredCountry} {/* Код страны */}
+        {getCountryName(hoveredCountry)} {/* Название страны */}
       </div>
       {visaData[hoveredCountry] && (
         <div className="text-xs opacity-90">
@@ -41,3 +48,4 @@ export default function CountryTooltip({
     </div>
   );
 }
+

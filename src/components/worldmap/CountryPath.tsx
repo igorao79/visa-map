@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { GeoPath } from 'd3-geo';
+import { convertToIso2 } from '@/lib/country-utils';
 
 interface CountryFeature {
   type: 'Feature';
@@ -33,11 +34,12 @@ export default function CountryPath({
   onMouseLeave
 }: CountryPathProps) {
   const countryCode = country.id;
-  const iso2Code = countryCode.length === 3 ? countryCode.slice(0, 2) : countryCode;
+  const iso2Code = convertToIso2(countryCode);
 
   return (
     <path
       key={countryCode}
+      className="country-path"
       d={pathGenerator(country as any) || undefined}
       fill={fillColor}
       onClick={(e) => onClick(iso2Code, e)}
@@ -49,3 +51,4 @@ export default function CountryPath({
     />
   );
 }
+

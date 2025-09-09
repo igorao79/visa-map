@@ -71,28 +71,34 @@ export const useVisaMap = ({
   };
 
   const handleMapCountryClick = (countryCode: string, isFirstClick: boolean) => {
-    if (isFirstClick) {
-      // Первый клик - ТОЛЬКО выбираем страну паспорта
-      const iso2Code = convertToIso2(countryCode);
-      setUserPassportCountry(iso2Code);
+    const iso2Code = convertToIso2(countryCode);
 
-      // Если выбранная страна совпадает с уже выбранной для назначения - сбрасываем назначение
-      if (selectedDestination === iso2Code) {
-        setSelectedDestination(null);
-      }
+    // Если не выбрана страна паспорта - выбираем её
+    if (!userPassportCountry) {
+      setUserPassportCountry(iso2Code);
       setIsFirstClick(false);
       setShowCountryDetails(false);
-    } else {
-      // Второй клик - ТОЛЬКО выбираем страну назначения
-      const iso2Code = convertToIso2(countryCode);
+      return;
+    }
+
+    // Если не выбрана страна назначения - выбираем её
+    if (!selectedDestination) {
       if (iso2Code === userPassportCountry) {
         alert(MESSAGES.sameCountryError);
         return;
       }
       setSelectedDestination(iso2Code);
-      setIsFirstClick(true);
       setShowCountryDetails(true);
+      return;
     }
+
+    // Если обе страны выбраны - заменяем страну назначения
+    if (iso2Code === userPassportCountry) {
+      alert(MESSAGES.sameCountryError);
+      return;
+    }
+    setSelectedDestination(iso2Code);
+    setShowCountryDetails(true);
   };
 
   const handleResetDestination = () => {

@@ -32,3 +32,6 @@ with open('europe_paths.txt', 'w', encoding='utf-8') as f:
 print('Создан файл europe_paths.txt с первыми европейскими странами')
 
 
+
+
+

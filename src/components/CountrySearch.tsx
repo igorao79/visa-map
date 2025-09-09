@@ -8,6 +8,7 @@ import { Country } from '@/types/visa';
 interface CountrySearchProps {
   onSelectCountry: (countryCode: string) => void;
   selectedCountry: string | null;
+  onClearSelection?: () => void;
   placeholder?: string;
   label?: ReactNode;
 }
@@ -15,6 +16,7 @@ interface CountrySearchProps {
 export default function CountrySearch({
   onSelectCountry,
   selectedCountry,
+  onClearSelection,
   placeholder = "Поиск страны...",
   label = "Выберите страну"
 }: CountrySearchProps) {
@@ -115,7 +117,7 @@ export default function CountrySearch({
   };
 
   return (
-    <div className="relative w-full max-w-md mx-auto">
+    <div className="relative w-full max-w-md mx-auto" style={{ position: 'relative', zIndex: 1 }}>
       <label className="block text-sm font-medium text-gray-700 mb-2">
         {label}
       </label>
@@ -193,22 +195,31 @@ export default function CountrySearch({
 
         {/* Отображение выбранной страны */}
         {selectedCountry && !query && (
-          <div className="mt-2 flex items-center px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-            <Flag 
-              code={selectedCountry.toLowerCase()} 
-              className="w-6 h-4 object-cover rounded-sm border border-gray-200 mr-2" 
-            />
-            <span className="text-sm font-medium text-blue-700">
-              Выбрано: {getSelectedCountryName()}
-            </span>
+          <div className="absolute top-full left-0 right-0 mt-1 flex items-center justify-between px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg shadow-sm z-10">
+            <div className="flex items-center">
+              <Flag
+                code={selectedCountry.toLowerCase()}
+                className="w-6 h-4 object-cover rounded-sm border border-gray-200 mr-2"
+              />
+              <span className="text-sm font-medium text-blue-700">
+                Выбрано: {getSelectedCountryName()}
+              </span>
+            </div>
+            {onClearSelection && (
+              <button
+                onClick={onClearSelection}
+                className="flex items-center justify-center w-6 h-6 bg-gray-200 hover:bg-gray-300 text-gray-600 hover:text-gray-800 rounded-full transition-all duration-200 ml-2"
+                aria-label="Сбросить выбор"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
         )}
       </div>
       
-      {/* Подсказка */}
-      <p className="mt-1 text-xs text-gray-500">
-        Начните вводить название страны для поиска
-      </p>
     </div>
   );
 }

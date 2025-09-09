@@ -21,7 +21,7 @@ export default function MapContainer({
   onCountryClick
 }: MapContainerProps) {
   return (
-    <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden" style={{ height: '500px' }}>
       {/* Карта всегда видна для тестирования */}
       <div className="relative" style={{ height: '500px' }}>
         <WorldMap
@@ -36,8 +36,6 @@ export default function MapContainer({
           isFirstClick={isFirstClick}
           userPassportCountry={userPassportCountry}
           selectedCountry={selectedCountry}
-          onResetZoom={() => {}}
-          onResetToDefault={() => {}}
         />
       </div>
     </div>

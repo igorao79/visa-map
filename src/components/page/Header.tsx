@@ -4,11 +4,11 @@ import React from 'react';
 import { AiOutlineGlobal } from 'react-icons/ai';
 
 interface HeaderProps {
-  showLegend: boolean;
-  onToggleLegend: () => void;
+  userPassportCountry: string | null;
+  onOpenLegendModal: () => void;
 }
 
-export default function Header({ showLegend, onToggleLegend }: HeaderProps) {
+export default function Header({ userPassportCountry, onOpenLegendModal }: HeaderProps) {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -24,7 +24,7 @@ export default function Header({ showLegend, onToggleLegend }: HeaderProps) {
 
           {/* Кнопка показа легенды */}
           <button
-            onClick={onToggleLegend}
+            onClick={onOpenLegendModal}
             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white
                      rounded-lg hover:bg-blue-700 transition-colors duration-200
                      shadow-sm hover:shadow-md text-sm font-medium"
@@ -33,10 +33,11 @@ export default function Header({ showLegend, onToggleLegend }: HeaderProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>{showLegend ? 'Скрыть легенду' : 'Показать легенду'}</span>
+            <span>Легенда</span>
           </button>
         </div>
       </div>
     </header>
   );
 }
+

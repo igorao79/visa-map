@@ -28,6 +28,11 @@ export const useMapInteractions = ({ countries, onCountryClick }: UseMapInteract
     // Проверяем, что клик действительно произошел на стране, а не на фоне
     const target = event.target as SVGElement;
     if (target.tagName === 'path' && target.getAttribute('data-country-code')) {
+      // Запрещаем выбор Антарктиды
+      if (countryId === SPECIAL_COUNTRIES.ANTARCTICA) {
+        return;
+      }
+
       // Дополнительная проверка для предотвращения ложных кликов
       // Проверяем, что страна действительно существует в наших данных
       const countryExists = countries.some(country => convertToIso2(country.id) === countryId);
@@ -59,6 +64,11 @@ export const useMapInteractions = ({ countries, onCountryClick }: UseMapInteract
     // Проверяем, что наведение действительно произошло на стране
     const target = event.target as SVGElement;
     if (target.tagName === 'path' && target.getAttribute('data-country-code')) {
+      // Запрещаем показ tooltip для Антарктиды
+      if (countryId === SPECIAL_COUNTRIES.ANTARCTICA) {
+        return;
+      }
+
       // Дополнительная проверка для предотвращения ложных наведений
       const countryExists = countries.some(country => convertToIso2(country.id) === countryId);
 
@@ -108,6 +118,7 @@ export const useMapInteractions = ({ countries, onCountryClick }: UseMapInteract
       }
 
       setHoveredCountry(countryId);
+      // Используем абсолютные координаты экрана для fixed позиционирования
       setTooltipPosition({ x: event.clientX, y: event.clientY });
     }
   }, [countries]);

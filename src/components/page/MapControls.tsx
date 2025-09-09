@@ -1,28 +1,24 @@
 'use client';
 
 import React from 'react';
-import { AiOutlineAim, AiOutlineSelect, AiOutlineZoomIn, AiOutlineHome, AiOutlineDrag, AiOutlineCheckCircle, AiOutlineIdcard, AiOutlineEnvironment, AiOutlineReload } from 'react-icons/ai';
+import { AiOutlineAim, AiOutlineSelect, AiOutlineZoomIn, AiOutlineDrag, AiOutlineCheckCircle, AiOutlineIdcard, AiOutlineEnvironment } from 'react-icons/ai';
 
 interface MapControlsProps {
   isFirstClick: boolean;
   userPassportCountry: string | null;
   selectedCountry: string | null;
-  onResetZoom: () => void;
-  onResetToDefault: () => void;
 }
 
 export default function MapControls({
   isFirstClick,
   userPassportCountry,
-  selectedCountry,
-  onResetZoom,
-  onResetToDefault
+  selectedCountry
 }: MapControlsProps) {
   return (
     <div>
       {/* Информационная панель */}
-      <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg z-20 max-w-xs">
-        <p className="text-sm text-gray-700 font-medium mb-2">
+      <div className="hidden md:block absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg z-20 max-w-xs">
+        <p className="hidden md:block text-sm text-gray-700 font-medium mb-2">
           <AiOutlineEnvironment className="inline mr-1" /> Интерактивная карта мира
         </p>
         <p className="text-xs text-gray-600 mb-2">
@@ -86,24 +82,6 @@ export default function MapControls({
         </div>
       </div>
 
-      {/* Кнопки управления картой */}
-      <div className="absolute bottom-4 left-4 flex space-x-2 z-20">
-        <button
-          onClick={onResetZoom}
-          className="bg-white/95 backdrop-blur-sm hover:bg-white/100 px-3 py-2 rounded-lg shadow-lg transition-colors duration-200 text-sm font-medium"
-          title="Сбросить масштаб"
-        >
-          <AiOutlineReload className="inline mr-1" /> Сброс
-        </button>
-        <button
-          onClick={onResetToDefault}
-          className="bg-white/95 backdrop-blur-sm hover:bg-white/100 px-3 py-2 rounded-lg shadow-lg transition-colors duration-200 text-sm font-medium"
-          title="Обычный масштаб"
-        >
-          <AiOutlineHome className="inline mr-1" />
-          Центр
-        </button>
-      </div>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import Instructions from '@/components/page/Instructions';
 import Footer from '@/components/page/Footer';
 import VisaLegend from '@/components/VisaLegend';
 import CountryDetails from '@/components/CountryDetails';
+import MapLegend, { WarningModal } from '@/components/worldmap/MapLegend';
 import { COUNTRIES } from '@/lib/countries';
 import { VisaStatus } from '@/types/visa';
 import { AppProvider, useAppContext } from '@/context/AppContext';
@@ -19,12 +20,14 @@ function HomeContent() {
     userPassportCountry,
     selectedDestination,
     showLegend,
+    showLegendModal,
     showCountryDetails,
     visaData,
     isFirstClick,
     setUserPassportCountry,
     setSelectedDestination,
     setShowLegend,
+    setShowLegendModal,
     setShowCountryDetails,
     setVisaData,
     setIsFirstClick,
@@ -57,9 +60,12 @@ function HomeContent() {
 
   return (
     <div className={STYLES.page.container}>
-      <Header showLegend={showLegend} onToggleLegend={() => setShowLegend(!showLegend)} />
+      <Header
+        userPassportCountry={userPassportCountry}
+        onOpenLegendModal={() => setShowLegendModal(true)}
+      />
 
-      <main className={STYLES.page.main}>
+      <main className={STYLES.page.main} style={{ minHeight: 'auto' }}>
         <SearchControls
           userPassportCountry={userPassportCountry}
           selectedDestination={selectedDestination}
@@ -97,6 +103,13 @@ function HomeContent() {
           onClose={() => setShowCountryDetails(false)}
         />
       )}
+
+      {/* Legend Modal */}
+      <MapLegend
+        userPassportCountry={userPassportCountry}
+        isOpen={showLegendModal}
+        onClose={() => setShowLegendModal(false)}
+      />
     </div>
   );
 }
