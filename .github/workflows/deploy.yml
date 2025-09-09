@@ -3,12 +3,17 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
 
     steps:
     - name: Checkout
@@ -31,10 +36,14 @@ jobs:
       env:
         NODE_ENV: production
 
-    - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-      uses: peaceiris/actions-gh-pages@v4
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./out
-        cname: visa-map.pages.dev
+        path: ./out
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
