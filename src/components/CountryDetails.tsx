@@ -23,7 +23,7 @@ export default function CountryDetails({
   if (!fromCountry || !toCountry) return null;
 
   const getCountryName = (code: string): string => {
-    const country = COUNTRIES.find(c => c.code === code);
+    const country = COUNTRIES.find(c => c.code === code.toUpperCase());
     return country?.name || code;
   };
 

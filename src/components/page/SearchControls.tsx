@@ -2,7 +2,9 @@
 
 import React from 'react';
 import { AiOutlineGlobal, AiOutlineAim, AiOutlineClose } from 'react-icons/ai';
+import Flag from 'react-world-flags';
 import CountrySearch from '@/components/CountrySearch';
+import { COUNTRIES } from '@/lib/countries';
 
 interface SearchControlsProps {
   userPassportCountry: string | null;
@@ -21,8 +23,8 @@ export default function SearchControls({
 }: SearchControlsProps) {
   const getCountryName = (code: string | null): string => {
     if (!code) return '';
-    // Здесь можно добавить логику получения названия страны по коду
-    return code.toUpperCase();
+    const country = COUNTRIES.find(c => c.code === code.toUpperCase());
+    return country?.name || code.toUpperCase();
   };
 
   return (
@@ -86,10 +88,11 @@ export default function SearchControls({
                }}
                title="Кликните для изменения страны назначения">
             <div className="flex items-center">
-              <div className="w-8 h-6 bg-green-200 rounded flex items-center justify-center mr-3">
-                <span className="text-xs font-bold text-green-800">
-                  {selectedDestination}
-                </span>
+              <div className="flex-shrink-0 mr-3">
+                <Flag
+                  code={selectedDestination?.toLowerCase()}
+                  className="w-8 h-6 object-cover rounded border border-gray-200"
+                />
               </div>
               <div>
                 <p className="text-sm font-medium text-green-800">
