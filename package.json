@@ -5,8 +5,14 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "build:gh-pages": "next build --turbopack",
+    "export": "next export",
+    "build:export": "npm run build:gh-pages && npm run export",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "type-check": "tsc --noEmit",
+    "analyze": "ANALYZE=true npm run build",
+    "clean": "rm -rf .next out"
   },
   "dependencies": {
     "@types/d3-geo": "^3.1.0",

@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🗺️ Visa Map App
 
-## Getting Started
+Интерактивная карта мира для проверки визовых требований между странами.
 
-First, run the development server:
+## 🚀 Возможности
+
+- 🌍 Интерактивная карта мира
+- 🛂 Проверка визовых требований
+- 🎯 Два режима выбора: страна паспорта → страна назначения
+- 📱 Адаптивный дизайн
+- ⚡ Оптимизированная производительность
+
+## 🛠️ Технологии
+
+- **Next.js 15** - React фреймворк с App Router
+- **TypeScript** - типизированный JavaScript
+- **Tailwind CSS** - утилитарный CSS фреймворк
+- **D3.js** - визуализация данных и SVG манипуляция
+- **Turbopack** - высокопроизводительный bundler
+
+## 📦 Установка и запуск
 
 ```bash
+# Установка зависимостей
+npm install
+
+# Запуск в режиме разработки
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Сборка для продакшена
+npm run build:gh-pages
+
+# Экспорт статических файлов
+npm run export
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Деплой на GitHub Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Проект автоматически деплоится на GitHub Pages при пуше в основную ветку.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Ручной деплой:
 
-## Learn More
+```bash
+# Сборка и экспорт
+npm run build:export
 
-To learn more about Next.js, take a look at the following resources:
+# Файлы будут в директории ./out
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Автоматический деплой:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Включите GitHub Pages в настройках репозитория
+2. Выберите источник: "GitHub Actions"
+3. При пуше в `master`/`main` ветку запустится автоматический деплой
 
-## Deploy on Vercel
+## 🎨 Оптимизации производительности
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ✅ **Turbopack** - ускоренная сборка в разработке
+- ✅ **Static Export** - генерация статических файлов для GitHub Pages
+- ✅ **Package Optimization** - оптимизация импортов иконок и библиотек
+- ✅ **Image Optimization** - автоматическая оптимизация изображений
+- ✅ **Code Splitting** - разделение кода для уменьшения размера бандла
+- ✅ **Caching Headers** - оптимизированные заголовки кеширования
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📊 Размер бандла
+
+- **First Load JS**: ~1.39 MB
+- **Shared JS**: ~122 kB
+- **Все страницы статически пререндерены**
+
+## 🌐 Демо
+
+[Посмотреть на GitHub Pages](https://igorao79.github.io/visa-map)
+
+## 📝 Лицензия
+
+MIT License - см. файл LICENSE для подробностей.

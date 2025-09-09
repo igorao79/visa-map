@@ -1,8 +1,8 @@
 // API клиент для passport-visa-api
 import { VisaApiResponse, VisaStatus } from '@/types/visa';
 
-// Используем наш локальный прокси API вместо прямого обращения к внешнему API
-const VISA_API_BASE_URL = '/api/visa';
+// Используем внешний API напрямую (для статического экспорта)
+const VISA_API_BASE_URL = 'https://rough-sun-2523.fly.dev';
 
 export class VisaApiClient {
   /**
@@ -17,7 +17,7 @@ export class VisaApiClient {
   ): Promise<VisaApiResponse> {
     try {
       // Пока поддерживаем только запросы по одной стране
-      const url = `${VISA_API_BASE_URL}/${fromCountry}`;
+      const url = `${VISA_API_BASE_URL}/country/${fromCountry}`;
       
       const response = await fetch(url, {
         method: 'GET',
